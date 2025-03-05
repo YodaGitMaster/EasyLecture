@@ -20,6 +20,12 @@ Usage
 
 The script can be run from the command line with various options:
 
+**Run without arguments (automatic device selection):**
+
+```sh
+python rec.py
+```
+
 **Specify both device index and output file:**
 
 ```sh
@@ -44,44 +50,63 @@ _Example:_
 python rec.py 32
 ```
 
-**Run without arguments (automatic device selection):**
-
-```sh
-python rec.py
-```
-
-## Script Details
-
-### Functions
-- **list_loopback_devices(p):** Lists all available loopback devices.
-- **record_short_sample(p, device_index, duration=2):** Records a short audio sample from the specified device.
-- **compute_rms(audio_np):** Computes the Root Mean Square (RMS) value of the audio sample.
-- **test_all_devices(duration=2, rms_threshold=500):** Tests all loopback devices for audio activity and returns a list of active devices.
-- **select_device_from_active(duration=2, rms_threshold=500):** Allows the user to select a device from the list of active devices.
-- **record_audio(output_file, device_index, silence_threshold=500, silence_timeout=30):** Records audio from the specified device and saves it to a WAV file.
-
-### Logging
-The script uses the logging library to provide informational and error messages. The log format includes the timestamp, log level, and message.
-
-### Main Execution
-- If a device index is provided as a command-line argument, the script uses that device.
-- If no device index is provided, the script automatically tests all devices for audio activity and prompts the user to select a device.
-- The recorded audio is saved to the specified output file or defaults to `output_audio.wav`.
-
-## Example
-
-To record audio from device index 32 and save it to `my_recording.wav`, run:
-
-```sh
-python rec.py 32 my_recording.wav
-```
-
-To automatically select a device and save the recording to the default file, run:
-
-```sh
-python rec.py
-```
 
 ## Notes
 - The script uses a silence threshold and timeout to automatically stop recording if no significant audio is detected for a specified period.
 - Ensure that the `pyaudiowpatch` library is correctly installed and configured for your system.
+
+
+
+# Transcribe
+
+## Install FFmpeg
+
+FFmpeg is required for audio processing. Below are installation steps for different operating systems.
+
+### Linux (Ubuntu/Debian)
+```
+sudo apt update
+sudo apt install -y ffmpeg
+```
+### For Arch Linux:
+```
+sudo pacman -S ffmpeg
+```
+
+### Mac (Homebrew)
+```
+brew install ffmpeg
+```
+### Windows
+```
+    Download the latest FFmpeg release from ffmpeg.org.
+    Extract the archive to a preferred location (e.g., C:\ffmpeg).
+    Add FFmpeg to the system PATH:
+        Open System Properties → Environment Variables.
+        Under System Variables, find and edit Path.
+        Add the path to FFmpeg’s bin directory (C:\ffmpeg\bin).
+    Verify installation:
+
+    ffmpeg -version
+```
+
+
+## Command List:
+### Run basic transcription:
+```python
+python transcribe.py input_audio.wav output_text.txt
+```
+### Run transcription with timestamps:
+```python
+python transcribe.py input_audio.wav output_text.txt --timestamps
+```
+#
+### Run transcription with a specific model:
+```python
+python transcribe.py input_audio.wav output_text.txt --model openai/whisper-large.en
+```
+### Run transcription with both timestamps and a specific model:
+```python
+
+python transcribe.py input_audio.wav output_text.txt --timestamps --model openai/whisper-base.en
+```
